@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import Navbar from './Navbar/Navbar';
 import Gallery from './Gallery/Gallery';
-
+import Search from './Search/Search'
 import {connect} from 'react-redux'
 import * as ACTIONS from '../actions/actionCreators';
 class App extends Component {
@@ -14,7 +14,7 @@ class App extends Component {
     // .then(res => {
     //   this.setState({photos: res.data.photos.photo})
     // })    
-    this.props.fetchImages();
+    this.props.fetchImages('');
   }
 
   render() {
@@ -23,7 +23,9 @@ class App extends Component {
       <div>
       <Navbar></Navbar>
        <p>App</p>
-       <Gallery />
+       <Search fetchImage={(searchTerm) => this.props.fetchImages(searchTerm)}/>
+
+       <Gallery images={this.props.galleryReducer.images}/>
        {/* {this.state.photos.map((photo, index) => {
         const src = `http://farm${photo.farm}.staticFlickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`;
         return <img src={src} alt='test'></img>
@@ -40,7 +42,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
   return {
-    fetchImages : () => dispatch(ACTIONS.fetchImages())
+    fetchImages : (searchTerm) => dispatch(ACTIONS.fetchImages(searchTerm))
   }
 }
 

@@ -1,13 +1,20 @@
+
 import * as TYPES from './actionTypes';
 import axios from 'axios';
 import { bindActionCreators } from 'C:/Users/Tal/AppData/Local/Microsoft/TypeScript/3.3/node_modules/redux';
 
-export const fetchImages = () => {
+export const fetchImages = (searchTerm) => {
   return dispatch => {
     dispatch(fetchImagesRequest())
-    axios.get('https://api.flickr.com/services/rest/?method=flickr.photos.search&safe_search=1&format=json&nojsoncallback=1&api_key=bac9f1ccfd854f27894fd47c4f01b1e8&content_type=1&is_getty=1')
+    const apiConfig = {
+      page: 1,
+      perPage: 25,
+      apiKey: 'bac9f1ccfd854f27894fd47c4f01b1e8',
+    }
+    console.log(searchTerm)
+    const {page, perPage, apiKey} = apiConfig;
+    axios.get(`https://api.flickr.com/services/rest/?method=flickr.photos.search&safe_search=1&format=json&nojsoncallback=1&api_key=${apiKey}&content_type=1&is_getty=1&page=${page}&per_page=${perPage}&text=${searchTerm}`)
     .then(res => {
-      console.log(res.data)
       dispatch(fetchImagesSuccess(res.data.photos.photo))
     })
     .catch(err => {

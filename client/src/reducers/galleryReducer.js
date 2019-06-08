@@ -4,7 +4,8 @@ const defaultState = {
   isLoading: false,
   images: [],
   counter: 0,
-  errorMessage: null
+  errorMessage: null,
+
 }
 
 const galleryReducer = (state = defaultState, action) => {
