@@ -30,6 +30,7 @@
     "express": "^4.17.1",
     "flickrapi": "^0.6.2",
     "nodemon": "^1.19.1",
+    "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",

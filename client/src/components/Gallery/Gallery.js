@@ -1,73 +1,94 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import * as ACTIONS from "../../actions/actionCreators";
+import Search from "./Search";
+import PhotoGrid from "./PhotoGrid";
 
-const Grid = styled.div`
-  line-height: 0;
-   
-   -webkit-column-count: 4;
-   -webkit-column-gap:   20px;
-   -moz-column-count:    4;
-   -moz-column-gap:      20px;
-   column-count:         4;
-   column-gap:           20px;  
- 
-   @media (max-width: 1200px) {
- 
-  -moz-column-count:    4;
-  -webkit-column-count: 4;
-  column-count:         4;
-  
-}
-@media (max-width: 1000px) {
+class Gallery extends React.Component {
 
-  -moz-column-count:    3;
-  -webkit-column-count: 3;
-  column-count:         3;
-  
-}
-@media (max-width: 800px) {
-  
-  -moz-column-count:    2;
-  -webkit-column-count: 2;
-  column-count:         2;
-  
-}
-@media (max-width: 400px) {
-  
-  -moz-column-count:    1;
-  -webkit-column-count: 1;
-  column-count:         1;
-  
-}
-`;
-const ImageWrapper = styled.div`
+  state = {
+    searchTerm: '',
+    page: 1
+  }
 
-img {
-  width: 100% !important;
-  height: auto !important;
-  margin:10px;
+ componentDidMount() {
+   this.props.fetchImages(this.state.page, this.state.searchTerm, true);
+   window.addEventListener('scroll', this.handleScroll);
+
+ }
+componentWillUnmount() {
+  window.removeEventListener('scroll', this.handleScroll);
 }
- 
-`
-// const Image = styled.img`
-//   width: 100%;
-//   height: 100%;
-//   object-fit: cover;
-// `;
-const Gallery = props => {
+
+handleScroll = e => {
+  //console.log('window.innerHeight: ' + window.innerHeight);
+  //console.log('document.documentElement.scrollTop: ' + document.documentElement.scrollTop);
+
+  const bottom2 = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+  if(bottom2)   console.log('bottom2')
+  if (
+    window.innerHeight + document.documentElement.scrollTop ===
+    document.documentElement.offsetHeight
+  ) {
+    console.log("bottom");
+    const currentPage = this.state.page
+    this.setState({page: currentPage + 1},
+      () => {
+        this.props.fetchImages(this.state.page, this.state.searchTerm, true);
+
+      })
+  }
+}
+
+
+  onSearch = searchTerm => {
+    this.setState({searchTerm},
+      () => {
+        this.props.fetchImages(this.state.page, this.state.searchTerm, false);
+
+      })
+  }
+
+  showSearch = (index) => {
+    console.log(index);
+    this.props.showSearch(index)
+  }
+
+
+  saveSearch = () => {
+    const toSave = this.props.galleryReducer.images;
+    this.props.saveSearch(toSave);
+  }
+  render() {
   return (
-    <Grid>
-      {props.images.map((photo, index) => {
-//        console.log(photo);
-        const src = `http://farm${photo.farm}.staticFlickr.com/${
-          photo.server
-        }/${photo.id}_${photo.secret}.jpg`;
-        return <ImageWrapper key={index}><img  src={src} /></ImageWrapper>;
-      })}
-    </Grid>
+    <div>
+          <Search onSearch={(searchTerm) => this.onSearch(searchTerm)}/>    
+          <button onClick={() => this.saveSearch()}>Save Search</button>
+          <ul>
+          {this.props.galleryReducer.savedSearches.map((savedSearch, index) => {
+            return <li onClick={(() => this.showSearch(index))} key={index}>Save {index}</li>
+          })}
+          </ul>
+      <PhotoGrid images={this.props.galleryReducer.images} />
+      <p>test</p>
+      </div>
   );
+  }
 };
 
-export default Gallery;
+
+const mapStateToProps = state => {
+  return {
+    galleryReducer: state.galleryReducer
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchImages : (page, searchTerm, isNewPage) => dispatch(ACTIONS.fetchImages(page, searchTerm, isNewPage)),
+    saveSearch: (searchValues) => dispatch(ACTIONS.saveSearch(searchValues)),
+    showSearch :index => dispatch(ACTIONS.showSearch(index)),
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Gallery);
