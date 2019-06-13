@@ -4,7 +4,7 @@ const savedSearches = localStorage.saves ? JSON.parse(localStorage.saves) : []
 
 const defaultState = {
   searchMode: 'any',
-  currentKeyword :'',
+  currentKeyword :'1',
   isLoading: false,
   images: [],
   counter: 0,

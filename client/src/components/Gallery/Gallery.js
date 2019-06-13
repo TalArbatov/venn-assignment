@@ -17,7 +17,8 @@ class Gallery extends React.Component {
   };
 
   componentDidMount() {
-    this.props.fetchImages(this.state.page, '', true);
+    //this.props.fetchImages(this.state.page, '', true);
+    this.fetchImages(true)
     window.addEventListener("scroll", this.handleScroll);
   }
   componentWillUnmount() {
@@ -29,17 +30,29 @@ class Gallery extends React.Component {
       console.log("user reached bottom, fetching new images");
       const currentPage = this.state.page;
       this.setState({ page: currentPage + 1 }, () => {
-        this.props.fetchImages(this.state.page, this.props.galleryReducer.currentKeyword, true);
+       // this.props.fetchImages(this.state.page, this.props.galleryReducer.currentKeyword, true);
+       this.fetchImages(true)
       });
     }
   };
+
+  fetchImages = (isNewPage) => {
+    const page = this.state.page;
+    const {currentKeyword : searchTerm, searchMode} = this.props.galleryReducer;
+    this.props.fetchImages(page, searchTerm, isNewPage, searchMode);
+    console.log(`page ${page}`)
+    console.log(`searchTerm ${searchTerm}`)
+    console.log(`isNewPage ${isNewPage}`)
+    console.log(`searchMode ${searchMode}`)
+  }
 
   onSearchKeyUp = searchTerm => {
     // this.setState({ searchTerm }, () => {
     //   this.props.fetchImages(this.state.page, this.state.searchTerm, false);
     // });
     this.props.onSearchKeyUp(searchTerm);
-    this.props.fetchImages(this.state.page, searchTerm, false)
+   // this.props.fetchImages(this.state.page, searchTerm, false, this.props.)
+   this.fetchImages(false)
   };
 
   showSearch = index => {
@@ -55,10 +68,15 @@ class Gallery extends React.Component {
 
   // };
 
+  handleSwitchChange = () => {
+    this.props.toggleAndOr();
+    this.fetchImages(true)
+  }
+
   render() {
     return (
       <Wrapper>
-        <Search onSearchKeyUp={searchTerm => this.onSearchKeyUp(searchTerm)} handleSwitchChange={() => this.props.toggleAndOr()}/>
+        <Search onSearchKeyUp={searchTerm => this.onSearchKeyUp(searchTerm)} handleSwitchChange={() => this.handleSwitchChange()}/>
         {/* <button onClick={() => this.saveSearch()}>Save Search</button>
         <SavedSearches savedSearches={this.props.galleryReducer.savedSearches} showSearch={(index) => this.showSearch(index)}/> */}
         <PhotoGrid images={this.props.galleryReducer.images} />

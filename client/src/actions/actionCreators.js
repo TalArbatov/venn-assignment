@@ -8,7 +8,7 @@ export const onSearchKeyUp = (keyword) => {
   }
 }
 
-export const fetchImages = (page, searchTerm, isNewPage) => {
+export const fetchImages = (page, searchTerm, isNewPage, searchMode) => {
   console.log(
     "fetchImages actionCreator, page: " + page + " searchTerm: " + searchTerm
   );
@@ -17,7 +17,7 @@ export const fetchImages = (page, searchTerm, isNewPage) => {
     const apiKey = "bac9f1ccfd854f27894fd47c4f01b1e8";
     axios
       .get(
-        `https://api.flickr.com/services/rest/?method=flickr.photos.search&safe_search=1&format=json&nojsoncallback=1&api_key=${apiKey}&content_type=1&is_getty=1&page=${page}&per_page=20&tags=${searchTerm}`
+        `https://api.flickr.com/services/rest/?method=flickr.photos.search&safe_search=1&format=json&nojsoncallback=1&api_key=${apiKey}&content_type=1&is_getty=1&page=${page}&per_page=20&tags=${searchTerm}&tag_mode=${searchMode}`
       )
       .then(res => {
         dispatch(fetchImagesSuccess(res.data.photos.photo, isNewPage));
