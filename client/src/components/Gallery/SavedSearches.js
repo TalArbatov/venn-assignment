@@ -1,17 +1,20 @@
-import React from "react";
+// import React from "react";
 
-const SavedSearches = props => {
-  return (
-    <ul>
-      {props.savedSearches.map((savedSearch, index) => {
-        return (
-          <li onClick={() => props.showSearch(index)} key={index}>
-            Save {index}
-          </li>
-        );
-      })}
-    </ul>
-  );
-};
+// const SavedSearches = props => {
+//   return (
+//     <ul>
+//       {props.savedSearches.map((savedSearch, index) => {
+//         return (
+//           <li >
+//             Save {index + 1}: {savedSearch.keyword} 
+//           </li>
+//         );
+//       })}
+//     </ul>
+//   );
+// };
 
-export default SavedSearches;
+// export default SavedSearches;
+
+
+//DEPRECATED

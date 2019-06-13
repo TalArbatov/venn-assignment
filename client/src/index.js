@@ -11,6 +11,8 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     max-width:100vw;
+    font-family:Gisha;
+
   }
  `;
 

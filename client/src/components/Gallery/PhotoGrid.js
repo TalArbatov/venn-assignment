@@ -50,7 +50,9 @@ const PhotoGrid = props => {
         const src = config.getImageUrl(photo);
         return (
           <ImageWrapper key={index}>
+            <a href={src}>
             <img src={src} />
+            </a>
           </ImageWrapper>
         );
       })}
